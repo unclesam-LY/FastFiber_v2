@@ -4,6 +4,7 @@ import (
 	"FastFiber_v2/core"
 	"FastFiber_v2/flags"
 	"FastFiber_v2/global"
+	"FastFiber_v2/routers"
 	"go.uber.org/zap"
 )
 
@@ -15,4 +16,6 @@ func main() {
 	zap.ReplaceGlobals(global.Log)
 	global.DB = core.InitGorm()
 	flags.Run()
+
+	routers.Run()
 }
