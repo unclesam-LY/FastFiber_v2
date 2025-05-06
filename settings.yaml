@@ -1,0 +1,38 @@
+db:
+  mode: mysql
+  db_name: "testgin"
+  host: 127.0.0.1
+  port: 3306
+  user: root
+  password: wangchan5
+redis:
+  addr: "127.0.0.1:6379"
+  password: "wangchan5"
+  db: 1
+system:
+  mode: release
+  host: api.unclesamblog.cn
+  port: 8000
+  env: debug # 日志使用
+  version: 1.0.1
+  allow_origins:
+    - http://localhost:3000
+log:
+  prefix: "blog4"
+  filename: ./logs/blog.log
+  max_size: 100    # MB
+  max_backups: 7
+  max_age: 28
+  compress: false
+jwt:
+  issuer: "山姆叔叔"
+  access_secret: "django-insecure-pfgn+96(rq74los_7d#n8#b07+$23vnxy*#y^y=eu9&_1eqk$7"
+  refresh_secret: "3676f2d0e99f294aab75997e16340370"
+  access_expire: 2   # 小时
+  refresh_expire: 168 # 小时（7天）
+upload:
+  size: 2 # MB
+  path: images
+site:
+  login:
+    captcha: false
