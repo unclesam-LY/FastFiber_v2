@@ -1,5 +1,5 @@
 .idea
-.logs
-.tem
-.uploads
+.logs/
+.tem/
+.uploads/
 .air_toml
