@@ -3,3 +3,4 @@
 .tem/
 .uploads/
 .air_toml
+*.log
