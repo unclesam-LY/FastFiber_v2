@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -44,7 +45,9 @@ func (db DB) Dsn() gorm.Dialector {
 		)
 		return postgres.Open(dsn)
 	default:
-		fmt.Println("数据库配置异常,与其模式:mysql/pgsql")
+		zap.L().Error("数据库配置模式异常",
+			zap.String("预期模式", "mysql/pgsql/sqlite"),
+			zap.Any("当前配置", db.Mode))
 		return nil
 	}
 }
