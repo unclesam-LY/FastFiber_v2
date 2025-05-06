@@ -18,8 +18,8 @@ system:
   allow_origins:
     - http://localhost:3000
 log:
-  prefix: "blog4"
-  filename: ./logs/blog.log
+  prefix: "app"
+  filename: ./logs/app.log
   max_size: 100    # MB
   max_backups: 7
   max_age: 28
