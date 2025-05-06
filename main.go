@@ -15,6 +15,7 @@ func main() {
 	// 使用zap全局替换（可选）
 	zap.ReplaceGlobals(global.Log)
 	global.DB = core.InitGorm()
+	global.Redis = core.InitRedis()
 	flags.Run()
 
 	routers.Run()
