@@ -13,7 +13,10 @@ func Run() {
 
 	// 静态文件路由
 	r.Static("/uploads", "./uploads")
-	// g := r.Group("api")
+	g := r.Group("api")
+
+	// 注册路由
+	UserRouter(g)
 
 	// 获取监听地址
 	addr := global.Config.System.Addr()

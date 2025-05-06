@@ -12,14 +12,23 @@ type Claims struct {
 	RoleID uint `json:"role_id"`
 }
 
-type Payload struct {
+type RefreshClaims struct {
+	UserID uint `json:"user_id"`
+}
+
+type AccessPayload struct {
 	Claims
+	jwt.RegisteredClaims
+}
+
+type RefreshPayload struct {
+	RefreshClaims
 	jwt.RegisteredClaims
 }
 
 // GenAccessToken 生成Access Token
 func GenAccessToken(data Claims) (string, error) {
-	claims := Payload{
+	claims := AccessPayload{
 		Claims: data,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(
@@ -33,9 +42,9 @@ func GenAccessToken(data Claims) (string, error) {
 }
 
 // GenRefreshToken 生成Refresh Token
-func GenRefreshToken(data Claims) (string, error) {
-	claims := Payload{
-		Claims: data,
+func GenRefreshToken(data RefreshClaims) (string, error) {
+	claims := RefreshPayload{
+		RefreshClaims: data,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(
 				time.Duration(global.Config.Jwt.RefreshExpire) * time.Hour,
@@ -48,18 +57,18 @@ func GenRefreshToken(data Claims) (string, error) {
 }
 
 // CheckAccessToken 验证访问令牌
-func CheckAccessToken(token string) (*Payload, error) {
-	return parseToken(token, global.Config.Jwt.AccessSecret)
+func CheckAccessToken(token string) (*AccessPayload, error) {
+	return parseAccessToken(token, global.Config.Jwt.AccessSecret)
 }
 
 // CheckRefreshToken 验证刷新令牌
-func CheckRefreshToken(token string) (*Payload, error) {
-	return parseToken(token, global.Config.Jwt.RefreshSecret)
+func CheckRefreshToken(token string) (*RefreshPayload, error) {
+	return parseRefreshToken(token, global.Config.Jwt.RefreshSecret)
 }
 
 // parseToken 验证token
-func parseToken(token, secret string) (*Payload, error) {
-	tokenObj, err := jwt.ParseWithClaims(token, &Payload{}, func(t *jwt.Token) (interface{}, error) {
+func parseAccessToken(token, secret string) (*AccessPayload, error) {
+	tokenObj, err := jwt.ParseWithClaims(token, &AccessPayload{}, func(t *jwt.Token) (interface{}, error) {
 		return []byte(secret), nil
 	})
 
@@ -67,7 +76,24 @@ func parseToken(token, secret string) (*Payload, error) {
 		return nil, err
 	}
 
-	if claims, ok := tokenObj.Claims.(*Payload); ok && tokenObj.Valid {
+	if claims, ok := tokenObj.Claims.(*AccessPayload); ok && tokenObj.Valid {
+		return claims, nil
+	} else {
+		return nil, errors.New("token无效")
+	}
+
+}
+
+func parseRefreshToken(token, secret string) (*RefreshPayload, error) {
+	tokenObj, err := jwt.ParseWithClaims(token, &RefreshPayload{}, func(t *jwt.Token) (interface{}, error) {
+		return []byte(secret), nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if claims, ok := tokenObj.Claims.(*RefreshPayload); ok && tokenObj.Valid {
 		return claims, nil
 	} else {
 		return nil, errors.New("token无效")

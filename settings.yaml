@@ -10,7 +10,7 @@ redis:
   password: "wangchan5"
   db: 1
 system:
-  mode: release
+  mode: debug
   host: api.unclesamblog.cn
   port: 8000
   env: debug # 日志使用
