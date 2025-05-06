@@ -39,14 +39,14 @@ func AuthAdminMiddleware() fiber.Handler {
 	}
 }
 
-func GetAuth(c *fiber.Ctx) (cl *jwts.Payload) {
-	cl = new(jwts.Payload)
+func GetAuth(c *fiber.Ctx) (cl *jwts.AccessPayload) {
+	cl = new(jwts.AccessPayload)
 	_claims := c.Locals("claims")
 	if _claims == nil {
 		return nil
 	}
 
-	cl, ok := _claims.(*jwts.Payload)
+	cl, ok := _claims.(*jwts.AccessPayload)
 	if !ok {
 		return nil
 	}

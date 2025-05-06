@@ -2,7 +2,9 @@ package user_api
 
 import (
 	"FastFiber_v2/global"
+	"FastFiber_v2/middleware"
 	"FastFiber_v2/models"
+	"FastFiber_v2/utils/jwts"
 	"FastFiber_v2/utils/pwd"
 	"FastFiber_v2/utils/res"
 	"github.com/gofiber/fiber/v2"
@@ -16,10 +18,8 @@ type RegisterReq struct {
 }
 
 func (UserApi) Register(c *fiber.Ctx) error {
-	var cr RegisterReq
-	if err := c.BodyParser(&cr); err != nil {
-		return res.FailWithError(err, c)
-	}
+
+	var cr = middleware.GetBind[RegisterReq](c)
 
 	if cr.Password != cr.RePassword {
 		return res.FailWithMsg("两次密码输入不一致", c)
@@ -49,5 +49,15 @@ func (UserApi) Register(c *fiber.Ctx) error {
 		return res.FailWithMsg("用户注册失败", c)
 	}
 
-	return res.OkWithMsg("注册成功", c)
+	accessToken, _ := jwts.GenAccessToken(jwts.Claims{
+		UserID: user.ID,
+		RoleID: uint(user.RoleID),
+	})
+
+	refreshToken, _ := jwts.GenRefreshToken(jwts.RefreshClaims{UserID: user.ID})
+
+	return res.OkWithData(Token{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}, c)
 }

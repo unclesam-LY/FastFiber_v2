@@ -2,6 +2,7 @@ package user_api
 
 import (
 	"FastFiber_v2/global"
+	"FastFiber_v2/middleware"
 	"FastFiber_v2/models"
 	"FastFiber_v2/utils/jwts"
 	"FastFiber_v2/utils/pwd"
@@ -21,10 +22,8 @@ type Token struct {
 }
 
 func (UserApi) Login(c *fiber.Ctx) error {
-	var cr Auth
-	if err := c.BodyParser(&cr); err != nil {
-		return res.FailWithError(err, c)
-	}
+
+	var cr = middleware.GetBind[Auth](c)
 
 	var user models.UserModel
 	err := global.DB.Where("username = ?", cr.Username).First(&user).Error
