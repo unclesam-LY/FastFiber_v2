@@ -2,5 +2,5 @@
 .logs/
 .tem/
 .uploads/
-.air_toml
+.air.toml
 *.log
