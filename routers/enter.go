@@ -17,6 +17,7 @@ func Run() {
 
 	// 注册路由
 	UserRouter(g)
+	CaptchaRouterGroup(g)
 
 	// 获取监听地址
 	addr := global.Config.System.Addr()

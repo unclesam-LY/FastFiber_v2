@@ -4,6 +4,7 @@ import (
 	"FastFiber_v2/global"
 	"FastFiber_v2/middleware"
 	"FastFiber_v2/models"
+	"FastFiber_v2/utils/captcha"
 	"FastFiber_v2/utils/jwts"
 	"FastFiber_v2/utils/pwd"
 	"FastFiber_v2/utils/res"
@@ -12,8 +13,10 @@ import (
 )
 
 type Auth struct {
-	Username string `json:"username" validate:"required" label:"用户名"`
-	Password string `json:"password" validate:"required" label:"密码"`
+	Username    string `json:"username" validate:"required" label:"用户名"`
+	Password    string `json:"password" validate:"required" label:"密码"`
+	CaptchaID   string `json:"captcha_id"`
+	CaptchaCode string `json:"captcha_code"`
 }
 
 type Token struct {
@@ -24,6 +27,15 @@ type Token struct {
 func (UserApi) Login(c *fiber.Ctx) error {
 
 	var cr = middleware.GetBind[Auth](c)
+
+	if global.Config.Site.Login.Captcha {
+		if cr.CaptchaID == "" || cr.CaptchaCode == "" {
+			return res.FailWithMsg("请输入验证码", c)
+		}
+		if !captcha.CaptChaStore.Verify(cr.CaptchaID, cr.CaptchaCode, true) {
+			return res.FailWithMsg("验证码不正确", c)
+		}
+	}
 
 	var user models.UserModel
 	err := global.DB.Where("username = ?", cr.Username).First(&user).Error

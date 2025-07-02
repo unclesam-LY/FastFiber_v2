@@ -6,4 +6,5 @@ type Config struct {
 	Log    Log    `yaml:"log"`
 	System System `yaml:"system"`
 	Jwt    Jwt    `yaml:"jwt"`
+	Site   Site   `yaml:"site"`
 }
