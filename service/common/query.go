@@ -20,6 +20,10 @@ func QueryList[T any](model T, option QueryOptions) (list []T, count int64, err 
 
 	query := global.DB.Where(model)
 
+	if option.Where != nil {
+		query = query.Where(option.Where)
+	}
+
 	// 模糊匹配
 	if option.Key != "" {
 		if len(option.Likes) != 0 {
@@ -53,13 +57,12 @@ func QueryList[T any](model T, option QueryOptions) (list []T, count int64, err 
 		option.Order = "created_at desc"
 	}
 
-	db := global.DB.Where("")
 	if option.Debug {
-		db = db.Debug()
+		query = query.Debug()
 	}
 
-	db.Where(query).Limit(option.Limit).Offset(offset).Order(option.Order).Find(&list)
+	query.Limit(option.Limit).Offset(offset).Order(option.Order).Find(&list)
 
-	db.Model(model).Where(query).Count(&count)
+	global.DB.Model(model).Where(query).Count(&count)
 	return
 }
