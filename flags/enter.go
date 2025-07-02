@@ -35,14 +35,14 @@ func Run() {
 		fmt.Println("当前后端版本:", global.Version)
 		os.Exit(0)
 	}
-	//if Options.Menu == "user" {
-	//	var user User
-	//	switch Options.Type {
-	//	case "create":
-	//		user.Create()
-	//	case "list":
-	//		user.List()
-	//	}
-	//	os.Exit(0)
-	//}
+	if Options.Menu == "user" {
+		var user User
+		switch Options.Type {
+		case "create":
+			user.Create()
+		case "list":
+			user.List()
+		}
+		os.Exit(0)
+	}
 }
