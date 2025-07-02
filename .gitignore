@@ -4,3 +4,4 @@
 .air.toml
 *.log
 /tmp/
+settings.yaml
