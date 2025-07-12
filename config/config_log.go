@@ -1,6 +1,7 @@
 package config
 
 type Log struct {
+	Env        string `yaml:"env"`
 	Prefix     string `yaml:"prefix"`
 	Filename   string `yaml:"filename"`
 	MaxSize    int    `yaml:"max_size"`

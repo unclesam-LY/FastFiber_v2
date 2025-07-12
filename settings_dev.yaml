@@ -1,6 +1,6 @@
 db:
     mode: mysql
-    db_name: "testgin"
+    db_name: "testfiber"
     host: 127.0.0.1
     port: 3306
     user: your username
@@ -13,11 +13,11 @@ system:
     mode: debug
     host: 127.0.0.1
     port: 8000
-    env: debug # 日志使用
     version: 1.0.1
     allow_origins:
         - http://localhost:3000
 log:
+    env: debug
     prefix: "app"
     filename: ./logs/app.log
     max_size: 100    # MB
